@@ -1,9 +1,9 @@
 
 # Theory on Learning
 
-Understanding the learning algorithm of neural network involves a fair dose of mathematical notations. This chapters is by no means a complete description of how networks do learn. As indicated at the end of this chapter, many other people have done an excellent job at accurately describing what is the theoretical foundation of learning and optimization mechanisms. Instead, this chapter is meant to backup some aspects of the implementation we gave in the previous chapters. It is assumed that you are comfortable with basic differential calculus. 
+Understanding the learning algorithm of neural network involves a fair dose of mathematical notations. This chapters is by no means a complete description of how networks do learn. As indicated at the end of this chapter, many other people have done an excellent job at accurately describing what is the theoretical foundation of learning and optimization mechanisms. Instead, this chapter is meant to backup some aspects of the implementation we gave in the previous chapters. It is assumed that you are comfortable with basic differential calculus.
 
-You can safely skip this chapter if it does not cover your interest. 
+You can safely skip this chapter if it does not cover your interest.
 
 ## Loss function
 
@@ -58,7 +58,7 @@ g
 
 ![Points and a line.](05-Learning/figures/pointsAndLine.png){#fig:pointsAndLine width=400px}
 
-Figure @fig:pointsAndLine shows the points and the blue line that we arbitrarily defined. As one can see, the value we picked for `a` and `b` are not really good since the blue line is rather far away from the first and the fourth points. If we want to look for better `a` and `b`, then we need to translate in some way how far the blue lines is from the points. 
+Figure @fig:pointsAndLine shows the points and the blue line that we arbitrarily defined. As one can see, the value we picked for `a` and `b` are not really good since the blue line is rather far away from the first and the fourth points. If we want to look for better `a` and `b`, then we need to translate in some way how far the blue lines is from the points.
 
 A _loss function_ is a mathematical function that maps an event, described as a set of values of one ore more variables, into a real number. The numerical value given by the loss function intuitively represents the _cost_ associated with the event. In our case, the loss function approximates the distance between the straight blue line with the four points. If the blue line is close to the four points, then the cost will be relatively low. Oppositely, if it is far away from the points, then the cost will be high.
 
@@ -66,7 +66,7 @@ A common loss function is the _mean squared error_ (MSE). This function, in our 
 
 $$J(a,b) = \frac{1}{n} \sum_{i=1}^{n}(y_i - f(x_i))^2$$
 
-Note that $J$ is always positive. The $J$ function indicates how close the $f$ function is to the points $(x_i, y_i)$, for two given values of $a$ and $b$. Note that the variables $x_1, ..., x_n, y_1, ..., y_n$ represent the data for which we would like to tune our model for. 
+Note that $J$ is never negative. The $J$ function indicates how close the $f$ function is to the points $(x_i, y_i)$, for two given values of $a$ and $b$. Note that the variables $x_1, ..., x_n, y_1, ..., y_n$ represent the data for which we would like to tune our model for.
 We can compute the value of $J$ as follows:
 
 ~~~~~~
@@ -77,17 +77,17 @@ f := [ :x | a * x + b ].
 j := (points collect: [ :p | (p y - (f value: p x)) raisedTo: 2 ]) sum / points size.
 ~~~~~~
 
-The script return the value `1.75`. If we change `a` for `2` and `b` for `-0.5`, `j` equals to `0.67`. If you draw the line with `a := 2` and `b := -0.5`, you will see that the blue line is closer to the red dots. 
+The script return the value `1.75`. If we change `a` for `2` and `b` for `-0.5`, `j` equals to `0.67`. If you draw the line with `a := 2` and `b := -0.5`, you will see that the blue line is closer to the red dots.
 
-We are here highlighting an important use of the loss function. Changing parameters (`a` and `b` in our case) may increase or decrease the MSE. A decrease of the MSE indicates that our parameters are better since our model makes less error. 
+We are here highlighting an important use of the loss function. Changing parameters (`a` and `b` in our case) may increase or decrease the MSE. A decrease of the MSE indicates that our parameters are better since our model makes less error.
 
-How this simple line relate to the fact that neural network are learning? The backpropagation algorithm is directly based on this mechanism but at a larger scale. In this example we look for two values (`a` and `b`), in a neural networks we could look for thousands of values, which correspond to the weights and biases. 
+How does this simple line relate to the fact that neural networks are learning? The backpropagation algorithm is directly based on this mechanism but at a larger scale. In this example we look for two values (`a` and `b`), in a neural network we could look for thousands of values, which correspond to the weights and biases.
 
-Let's come back to the points and lines example. Our original problem is to find the straight line that is the closest to the red point. This problem can therefore be translated into looking for `a` and `b` that minimize the MSE value. Looking for these two values manually is rather tedious and laborious. The natural next step is automatically finding the `a` and `b` that minimize the loss function.
+Let's come back to the points and lines example. Our original problem is to find the straight line that is the closest to the red points. This problem can therefore be translated into looking for `a` and `b` that minimize the MSE value. Looking for these two values manually is rather tedious and laborious. The natural next step is automatically finding the `a` and `b` that minimize the loss function.
 
 ## Gradient Descent
 
-The gradient descent is a general mechanism to look for an optimal model configuration. Gradient descent is intensively used in the field of mathematical optimization, including making neural network learn. 
+The gradient descent is a general mechanism to look for an optimal model configuration. Gradient descent is intensively used in the field of mathematical optimization, including making neural networks learn.
 
 First, we need to calculate the partial derivative of $MSE(a,b)$ with respect to each variable value. If we expand the $f$ function in $J$, then we have:
 
@@ -201,7 +201,7 @@ result := OrderedCollection new.
 	deriMSEb := (2 / points size) * (points collect: [ :aPoint | 1 * (aPoint y - (f value: aPoint x)) negated ]) sum.
 	a := a - (learningRate * deriMSEa).
 	b := b - (learningRate * deriMSEb).
-	
+
 	mse := (points collect: [ :aPoint | (aPoint y - (f value: aPoint x)) raisedTo: 2 ]) sum / points size.
 	result add: mse ].
 
@@ -247,7 +247,7 @@ $\frac{d}{dx}\sigma(x)=\frac{d}{dx}~\frac{1}{1+e^{-x}}$
 
 $=\frac{d}{dx} (1+e^{-z})^{-1}$
 
-Since the derivative of $x^n$ is $nx^{n-1}$, we have 
+Since the derivative of $x^n$ is $nx^{n-1}$, we have
 
 $=-(1 + e^{-x})^{-2}(-e^{-x})$
 
@@ -265,7 +265,7 @@ $=\frac{1}{1 + e^{-x}} . (1 - \frac{1}{1 + e^{-x}})$
 
 $=\sigma(x) . (1 - \sigma(x))$
 
-This result is expressed in `SigmoidAF>>derivative:`. 
+This result is expressed in `SigmoidAF>>derivative:`.
 
 ## Backpropagation
 
@@ -279,7 +279,7 @@ $$
 
 The expression $|| ... ||$ represents the magnitude of the vector enclosed between the sets of double vertical bars. For example, if $v$ is a vector of length three with elements $v_1$, $v_2$, $v_4$, then $||v|| = \sqrt{v_1^2+v_3^2+v_3^2}$.
 
-For example, considering elements of $\mathbb{R}^2$, if $y = (1, 0)$ and $y' = (0.5, 0.5)$, then $E(y, y') = \frac{1}{2}\sqrt{(1 - 0.5)^2 + (0 - 0.5)^2} = 0.353$. 
+For example, considering elements of $\mathbb{R}^2$, if $y = (1, 0)$ and $y' = (0.5, 0.5)$, then $E(y, y') = \frac{1}{2}\sqrt{(1 - 0.5)^2 + (0 - 0.5)^2} = 0.353$.
 
 Note that the fact of $\frac{1}{2}$ canvas the exponent when the function $E$ is differentiated. In particular, we have:
 
@@ -295,13 +295,13 @@ $$
 
 ### Applying gradient descent to weights
 
-Let $N$ be a neural network with $e$ connections, $m$ inputs, and $n$ outputs. We consider $x_1, x_2, ...$ vectors in $\mathbb{R}^m$, and $y_1, y_2, ...$ vectors in $\mathbb{R}^n$, and $w_0, w_1, w_2, ...$ vectors in $\mathbb{R}^e$. We call these sets _inputs_, _outputs_, _weights_ respectively. The neural network corresponds to a function $y = f_N(w, x)$, which, given a weight $w$, maps an input $x$ to an output $y$. 
+Let $N$ be a neural network with $e$ connections, $m$ inputs, and $n$ outputs. We consider $x_1, x_2, ...$ vectors in $\mathbb{R}^m$, and $y_1, y_2, ...$ vectors in $\mathbb{R}^n$, and $w_0, w_1, w_2, ...$ vectors in $\mathbb{R}^e$. We call these sets _inputs_, _outputs_, _weights_ respectively. The neural network corresponds to a function $y = f_N(w, x)$, which, given a weight $w$, maps an input $x$ to an output $y$.
 
 Training $N$ refers to producing a sequence of weights $w_0, w_1, ..., w_p$ for a sequence of _training examples_ $(x_1, y_1), ..., (x_p, y_p)$. The initial weight $w_0$ is randomly chosen.
 
 The weights are computed in turn. First compute $w_i$ using only $(x_i, y_i, w_{i-1})$ for $i = 1, ..., p$. The output of the backpropagation algorithm is $w_p$, which gives us a new function $x \longmapsto f_N(w_p, x)$. The computation is the same in each step, hense only the case $i = 1$ is described below.
 
-Calculating $w_1$ from $(x_1, y_1, w_0)$ is done by considering a variable weight $w$ and applying gradient descent to the function $w \longmapsto E(f_N(w, x_1), y_1)$ to find a local minimum, starting at $w = w_0$. This make $w_1$ the minimizing weight found by gradient descent. 
+Calculating $w_1$ from $(x_1, y_1, w_0)$ is done by considering a variable weight $w$ and applying gradient descent to the function $w \longmapsto E(f_N(w, x_1), y_1)$ to find a local minimum, starting at $w = w_0$. This make $w_1$ the minimizing weight found by gradient descent.
 
 
 
@@ -315,4 +315,3 @@ This section presents some of theoretical foundations of the implementation foun
 ## Further reading
 
 A number of excellent bibliographical references exist. _Deep Learning_ by Goodfellow _et al._, from MIT Press, is a reference of the field. Note that this book does not mention programming and implementation detail. It lay down the theoretical foundation of deep learning. A free version of the book is available from [https://www.deeplearningbook.org](https://www.deeplearningbook.org)
-
